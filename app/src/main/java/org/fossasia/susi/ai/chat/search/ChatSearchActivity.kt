@@ -9,6 +9,8 @@ import org.fossasia.susi.ai.R
 import org.fossasia.susi.ai.chat.search.adapters.ChatSearchAdapter
 import org.fossasia.susi.ai.data.db.DatabaseRepository
 import android.content.Intent
+import android.support.v7.widget.Toolbar
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_chat_search.chatSearchToolbar
@@ -16,6 +18,7 @@ import kotlinx.android.synthetic.main.activity_chat_search.search_not_found
 import org.fossasia.susi.ai.chat.ChatActivity
 
 class ChatSearchActivity : AppCompatActivity() {
+
 
     private val realm = Realm.getDefaultInstance()
     private val databaseRepository = DatabaseRepository()
@@ -30,7 +33,8 @@ class ChatSearchActivity : AppCompatActivity() {
         var bundle: Bundle ? = intent.extras
         query = bundle?.getString("query") as String
         setSupportActionBar(chatSearchToolbar)
-
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         setContentView(R.layout.activity_chat_search)
         loadQueryList(realm, query)
     }
@@ -64,11 +68,24 @@ class ChatSearchActivity : AppCompatActivity() {
         }
     }
 
+    override fun setSupportActionBar(toolbar: Toolbar?) {
+        onBackPressed()
+        super.setSupportActionBar(toolbar)
+    }
     // Handles back button action.
     override fun onBackPressed() {
         var intent = Intent(this, ChatActivity::class.java)
         startActivity(intent)
         super.onBackPressed()
+    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 }
 
